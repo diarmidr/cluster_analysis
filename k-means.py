@@ -1,4 +1,4 @@
-﻿# coding: utf-8
+# coding: utf-8
 """This script performs a cluster analysis on day ahead price profiles"""
 ########################################################################################################################
 # Import required tools
@@ -6,9 +6,10 @@
 
 # import off-the-shelf scripting modules
 from __future__ import division     # Without this, rounding errors occur in python 2.7, but apparently not in 3.4
-import pandas as pd                 # CSV handling
 import numpy as np
-#import SciPy                        # For cluster analysis
+import pandas as pd
+from scipy.cluster.vq import kmeans,vq,whiten                 # For cluster analysis
+
 # import raw temporal data
 raw_data = pd.read_csv('N2EX_clean_hourly_2018.csv')
 price = [float(x) for x in raw_data.ix[:, 'price_sterling']]
@@ -20,4 +21,14 @@ for i in range(int(len(price)/24)):
     arrays = arrays + [price_in_period]
 input_array = np.stack(arrays, axis=0)
 print(input_array)
-    
+
+# whiten the features
+data = input_array
+
+# find 4 clusters in the data
+centroids, distortion = kmeans(data, 4)
+
+# Output results
+print('centroids  : ',centroids)
+print('distortion :',distortion)
+
