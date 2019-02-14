@@ -22,13 +22,29 @@ for i in range(int(len(price)/24)):
 input_array = np.stack(arrays, axis=0)
 print(input_array)
 
-# whiten the features
-data = input_array
+# find n clusters in the data
+n = 7
+centroids, distortion = kmeans(input_array, n)
 
-# find 4 clusters in the data
-centroids, distortion = kmeans(data, 4)
-
-# Output results
 print('centroids  : ',centroids)
 print('distortion :',distortion)
+
+# Assign each sample to a cluster
+membership,_ = vq(input_array,centroids)
+print(membership)
+
+# CSV output
+
+# The average values for the cluster vectors
+clusters_output = pd.DataFrame()
+for i in range(n):
+    cluster = pd.DataFrame([centroids[i]])
+    clusters_output = clusters_output.append(cluster)
+clusters_output.to_csv("k-means_clusters_n=" + str(n) + ".csv", sep=',')
+
+# For each day of data, put alongside its cluster membership
+membership_col = pd.DataFrame(membership)
+membership_output = pd.concat([membership_col, pd.DataFrame(input_array)], axis=1)
+print(membership_output)
+membership_output.to_csv("k-means_cluster_membership_n=" + str(n) + ".csv", sep=',')
 
