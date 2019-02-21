@@ -126,6 +126,8 @@ dataframe_output.to_csv("hierarchical_clustering_max_d=" + str(max_d) + "_n="+ s
 
 # Plot clusters by making price v period set for each then doing x-y scatter
 plt.figure(figsize=(25, 10))
+axes = plt.gca()
+axes.set_ylim([0, 150])
 for i in [i+1 for i in range(n)]:
     n_list_period = []  # Rectacle for period data where cluster = n
     n_list_price = []   # Receptacle for price data where cluster = n
@@ -139,7 +141,7 @@ for i in [i+1 for i in range(n)]:
 
 plt.xlabel('Hour of day')
 plt.ylabel('Day-ahead electrical price (£.kWh-1)')
-axes = plt.gca()
-axes.set_xlim([0, 24])
 
+
+axes.set_xlim([0, 24])
 plt.show()
