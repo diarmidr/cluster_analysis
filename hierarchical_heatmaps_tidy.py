@@ -1,4 +1,4 @@
-﻿# coding: utf-8
+# coding: utf-8
 """This script performs a cluster analysis on day ahead price profiles"""
 ########################################################################################################################
 # Import required tools
@@ -15,14 +15,25 @@ from matplotlib import pyplot as plt
 import math
 
 # import raw temporal data
-raw_data = pd.read_csv('N2EX_clean_hourly_feb2018-feb2019.csv')
-price = [float(x) for x in raw_data.ix[:, 'price_sterling']]
+raw_data = pd.read_csv('N2EX_hourly_2018_calendar_year.csv', encoding='ISO-8859-1')
+raw_price = raw_data.ix[:, 'price_sterling']
+# Tidy up price data (remove commas from as-downloaded CSV)
+price = []
+for raw in raw_price:
+    stripped = ''
+    for c in str(raw):
+        if c == ',':
+            continue
+        else:
+            stripped = stripped + c
+    price = price + [float(stripped) / 100]
 
 # Get 24h profile in list format, then stack in array.
 arrays = []
 for i in range(int(len(price)/24)):
     price_profile = np.array(price[i*24:(i+1)*24])
     arrays = arrays + [price_profile]
+print(arrays)
 input_array = np.stack(arrays, axis=0)
 #print(input_array)
 
@@ -111,9 +122,10 @@ for i in range(int(len(price)/24)):
     hour_index = hour_index + [x+1 for x in range(len(input_array[i,:]))]
     day = [i for x in input_array[i,:]]
     day_index = day_index + day
-    cluster= [cluster_membership[i] for x in input_array[i,:]]
+    cluster = [cluster_membership[i] for x in input_array[i,:]]
     cluster_index = cluster_index + cluster
     price_profile = price[i*24:(i+1)*24]
+    print(price_profile)
     price_data = price_data + price_profile
 
 dataframe_output = pd.DataFrame({"hour": hour_index,
@@ -167,31 +179,31 @@ clusters_for_means.to_csv("clusters_for_means=" + str(cutoff) + "_n="+ str(n) + 
 # CSV for clusters organised into calandar layout
 days_of_week = ["mon", "tue", "wed", "thur", "fri", "sat", "sun"]
 print("Have you entered the correct day of week for the start point?")
-start_day = "thur"
+start_day = "mon"
 d_0 = days_of_week.index(start_day) # Get number of start day
 
 calendar_output = pd.DataFrame()   #Start output table
 calendar_output = calendar_output.append([days_of_week]) # Insert days of week as header
 
-    # Add spacer at start of data to get clusters lined up on right day of week
+# Add spacer at start of data to get clusters lined up on right day of week
 spacer_start = []     
 if d_0 > 0:
     for i in range(d_0):
         spacer_start = spacer_start + ["NaN"]
 
 cluster_membership = spacer_start + cluster_membership.tolist()
+print(len(cluster_membership))
 
-    # Add spacer at end of data (to avoid error when chopping into week rows)
+# Add enough spacers at end to make total length of cluster_membership list a multiple of 7 (avoid index error below)
 round_up = len(cluster_membership) % 7
 print(round_up)
 spacer_end = []
-for i in range(round_up):
+for i in range(7-round_up):             # For every spacer at start,
     spacer_end = spacer_end + ["NaN"]
 
 cluster_membership = cluster_membership + spacer_end
 
-    # Go through cluster membership list and arrange in 7 day rows
-    
+# Go through cluster membership list and arrange in 7 day rows
 day=1
 while day < len(cluster_membership):
     counter = 0
