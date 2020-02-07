@@ -1,7 +1,7 @@
 ﻿# coding: utf-8
 """This script:
  1: Imports n lists of 24 x d hourly data points
- 2: for each list, normalised based on maximum element
+ 2: For each list, normalised based on maximum element
  3: For each d, take points 24d - to 24(d+1) for each n and form list of length 24 x n
  4: Make list of lists of length 24 x n to get 24 x n X d array
  5: perform cluster analysis on this array"""
