@@ -22,7 +22,7 @@ import math
 # import raw temporal data
 raw_data = pd.read_csv('all_data_for_clustering.csv', encoding='ISO-8859-1')
 
-# Clean it and put in a big l_o_l
+# Clean it and put in a big list of lists (l_o_l)
 by_input_l_o_l = []
 for col in ['Demand_(MW)', 'CCGT_Gen', 'Coal_Gen', 'Wind_Gen', 'Solar_Gen']:
     raw_input = raw_data[col]
