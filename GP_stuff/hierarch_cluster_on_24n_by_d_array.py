@@ -204,5 +204,3 @@ acceleration_rev_pad = acceleration_rev_pad + [1000000]
 
 elbow_plot = pd.DataFrame({"Index": idxs, "Distance to Merge": last_rev, "Acceleration": acceleration_rev_pad})
 elbow_plot.to_csv("elbow_plot_cutoff=" + str(cutoff) + "_n="+ str(n) + ".csv", sep=',')
-
-
