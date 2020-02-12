@@ -19,7 +19,7 @@ from matplotlib import pyplot as plt
 import tkinter as _tkinter
 import math
 
-def pre_cluster_step(data, cutoff):
+def pre_cluster_step(data, cutoff, dim):
     df = pd.read_csv(data, encoding='ISO-8859-1')
     # Clean it and put in a big list of lists (l_o_l)
     by_variable_l_o_l = []
@@ -43,10 +43,10 @@ def pre_cluster_step(data, cutoff):
     # Get data ready for clustering by making an array where each row contains concatenation of 24h of each input variable
     by_day_l_o_l = []
     # Loop takes a day of data at a time (i.e. 24h data-points)
-    for d in range(int(len(by_variable_l_o_l[0])/24)):
+    for i in range(int(len(by_variable_l_o_l[0])/int(d))):
         day_row_multi_input = []
         for n in range(len(by_variable_l_o_l)):
-            day_row_multi_input += by_variable_l_o_l[n][d*24:(d+1)*24] # Take 24h slice for nth variable and append it to row
+            day_row_multi_input += by_variable_l_o_l[n][i*d:(i+1)*d] # Take d hour slice for nth variable and append it to row
         by_day_l_o_l = by_day_l_o_l + [day_row_multi_input]
     # Clustering takes a numpy array
     input_array = np.array(by_day_l_o_l)
@@ -82,5 +82,5 @@ def pre_cluster_step(data, cutoff):
     return cluster_membership
 
 # Demo call
-clustering = pre_cluster_step('input_variable_data_for_clustering.csv', cutoff='acceleration')
+clustering = pre_cluster_step('input_variable_data_for_clustering.csv', cutoff='acceleration', d=1)
 print(clustering)
