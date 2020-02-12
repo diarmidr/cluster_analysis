@@ -19,7 +19,7 @@ from matplotlib import pyplot as plt
 import tkinter as _tkinter
 import math
 
-def pre_cluster_step(data, cutoff, dim):
+def pre_cluster_step(data, cutoff, d):
     df = pd.read_csv(data, encoding='ISO-8859-1')
     # Clean it and put in a big list of lists (l_o_l)
     by_variable_l_o_l = []
